@@ -22,7 +22,18 @@ Access the live app at:
 
 ## Tool Functions
 
-## Example Conversation
+### Google Search
+```javascript
+// Mock implementation - replace with actual Google Search API
+async function googleSearch(query) { /* ... */ }```
+
+AI Pipe
+javascript// Mock implementation - replace with actual AI Pipe API  
+async function aiPipe(prompt, operation) { /* ... */ }
+Code Execution
+javascript// Secure in-browser JavaScript execution
+async function executeCode(code) { /* ... */ }
+Example Conversation
 User: Interview me to create a blog post.
 Agent: Sure! What's the post about?
 User: About IBM
@@ -30,18 +41,3 @@ Agent: Let me search for IBM → [calls google_search("IBM")]
 Agent: OK, IBM is a big company founded in... 
 User: Next step, please.
 ...
-
-### Google Search
-```javascript
-// Mock implementation - replace with actual Google Search API
-async function googleSearch(query) { /* ... */ }```
-
-### AI Pipe
-```javascript
-// Mock implementation - replace with actual AI Pipe API  
-async function aiPipe(prompt, operation) { /* ... */ }```
-
-### Code Execution
-```javascript
-// Secure in-browser JavaScript execution
-async function executeCode(code) { /* ... */ }```
