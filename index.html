@@ -3,37 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Minimal LLM Agent</title>
+    <title>Universal LLM Agent</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="container mt-4">
-        <h1>Minimal LLM Agent</h1>
+        <h1>Universal LLM Agent</h1>
+        <p class="text-muted">Support for any OpenAI-compatible LLM API with function calling</p>
         
-        <!-- Model Selection -->
-        <div class="row mb-3">
-            <div class="col-md-6">
-                <label for="provider" class="form-label">Provider</label>
-                <select id="provider" class="form-select">
-                    <option value="openai">OpenAI</option>
-                    <option value="anthropic">Anthropic</option>
-                    <option value="gemini">Google Gemini</option>
-                </select>
+        <!-- Provider Configuration -->
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>LLM Configuration</h5>
             </div>
-            <div class="col-md-6">
-                <label for="model" class="form-label">Model</label>
-                <select id="model" class="form-select">
-                    <option value="gpt-4">GPT-4</option>
-                    <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
-                </select>
-            </div>
-        </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="provider-preset" class="form-label">Quick Presets</label>
+                        <select id="provider-preset" class="form-select">
+                            <option value="custom">Custom Configuration</option>
+                            <option value="openai">OpenAI</option>
+                            <option value="anthropic">Anthropic (Claude)</option>
+                            <option value="gemini">Google Gemini</option>
+                            <option value="azure">Azure OpenAI</option>
+                            <option value="ollama">Ollama (Local)</option>
+                            <option value="together">Together AI</option>
+                            <option value="perplexity">Perplexity</option>
+                            <option value="groq">Groq</option>
+                            <option value="cohere">Cohere</option>
+                            <option value="mistral">Mistral AI</option>
+                        </select>
+                    </div>
+                    <div class="col-md-8">
+                        <label for="api-endpoint" class="form-label">API Endpoint URL</label>
+                        <input type="url" id="api-endpoint" class="form-control" 
+                               placeholder="https://api.openai.com/v1/chat/completions">
+                    </div>
+                </div>
+                
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label for="model-name" class="form-label">Model Name</label>
+                        <input type="text" id="model-name" class="form-control" 
+                               placeholder="gpt-4, claude-3-sonnet, etc.">
+                    </div>
+                    <div class="col-md-6">
+                        <label for="api-key" class="form-label">API Key</label>
+                        <input type="password" id="api-key" class="form-control" 
+                               placeholder="Enter your API key">
+                    </div>
+                </div>
 
-        <!-- API Key -->
-        <div class="mb-3">
-            <label for="apiKey" class="form-label">API Key</label>
-            <input type="password" id="apiKey" class="form-control" placeholder="Enter your API key">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <label for="auth-type" class="form-label">Auth Type</label>
+                        <select id="auth-type" class="form-select">
+                            <option value="bearer">Bearer Token</option>
+                            <option value="api-key">API Key Header</option>
+                            <option value="custom">Custom Header</option>
+                            <option value="none">No Auth</option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="auth-header" class="form-label">Auth Header Name</label>
+                        <input type="text" id="auth-header" class="form-control" 
+                               placeholder="Authorization" disabled>
+                    </div>
+                    <div class="col-md-4">
+                        <label for="request-format" class="form-label">Request Format</label>
+                        <select id="request-format" class="form-select">
+                            <option value="openai">OpenAI Format</option>
+                            <option value="anthropic">Anthropic Format</option>
+                            <option value="gemini">Gemini Format</option>
+                            <option value="custom">Custom Format</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button type="button" class="btn btn-success" onclick="testConnection()">Test Connection</button>
+                <button type="button" class="btn btn-secondary" onclick="saveConfiguration()">Save Config</button>
+                <button type="button" class="btn btn-outline-secondary" onclick="loadConfiguration()">Load Config</button>
+            </div>
         </div>
 
         <!-- Alerts -->
@@ -44,11 +95,34 @@
 
         <!-- Input -->
         <div class="input-group">
-            <input type="text" id="user-input" class="form-control" placeholder="Type your message..." onkeypress="handleKeyPress(event)">
+            <input type="text" id="user-input" class="form-control" 
+                   placeholder="Type your message..." onkeypress="handleKeyPress(event)">
             <button class="btn btn-primary" onclick="sendMessage()">Send</button>
         </div>
     </div>
 
+    <!-- Configuration Modal -->
+    <div class="modal fade" id="configModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Advanced Configuration</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="custom-config" class="form-label">Custom Request Template (JSON)</label>
+                    <textarea id="custom-config" class="form-control" rows="10" 
+                              placeholder="Enter custom request template..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="applyCustomConfig()">Apply</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
