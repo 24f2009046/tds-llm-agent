@@ -506,5 +506,5 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('auth-type').addEventListener('change', updateAuthFields);
     
     updateAuthFields();
-    showAlert('🚀 Universal LLM Agent ready! Configure your API and start chatting.', 'info');
+    showAlert('LLM Agent ready! Configure your API and start chatting.', 'info');
 });
